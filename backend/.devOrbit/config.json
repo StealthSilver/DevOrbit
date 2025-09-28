@@ -1,1 +1,16 @@
-{}
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::156041407839:user/Rajat"
+      },
+      "Action": "s3:*",
+      "Resource": [
+        "arn:aws:s3:::sampledevorbitbucket",
+        "arn:aws:s3:::sampledevorbitbucket/*"
+      ]
+    }
+  ]
+}
