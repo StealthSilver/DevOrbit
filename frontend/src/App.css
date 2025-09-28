@@ -1,0 +1,271 @@
+/* =========================
+   Global Styles
+========================= */
+body {
+  margin: 0;
+  font-family: "Inter", "Segoe UI", sans-serif;
+  background-color: #1a1b1e;
+  color: #dceaf4;
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  transition: all 0.3s ease;
+}
+
+input {
+  font-family: inherit;
+  background-color: #1a1b1e;
+  border: 1px solid #38437c;
+  padding: 10px;
+  color: #dceaf4;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+input:focus {
+  border-color: #7ae2dd;
+  box-shadow: 0 0 0 2px rgba(122, 226, 221, 0.2);
+  outline: none;
+}
+
+/* =========================
+     Navbar
+  ========================= */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 28px;
+  background-color: #0f1013;
+  border-bottom: 1px solid #38437c;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+nav img {
+  width: 34px;
+  margin-right: 10px;
+}
+
+nav h3 {
+  display: inline;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #7ae2dd;
+}
+
+nav div {
+  display: flex;
+  gap: 25px;
+}
+
+nav div p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #dceaf4;
+  transition: color 0.3s ease;
+}
+
+nav div p:hover {
+  color: #7ae2dd;
+}
+
+/* =========================
+     Dashboard
+  ========================= */
+#dashboard {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 24px;
+  padding: 24px;
+}
+
+#dashboard aside,
+#dashboard main {
+  background: #232429;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+
+#dashboard h2,
+#dashboard h3 {
+  margin-bottom: 16px;
+  color: #7ae2dd;
+}
+
+#dashboard div {
+  margin-bottom: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  background: #2c2d33;
+}
+
+#search input {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+/* =========================
+     Auth Pages (Login/Signup)
+  ========================= */
+.auth-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.auth-logo img {
+  width: 70px;
+  margin-bottom: 20px;
+}
+
+.auth-box {
+  background: #232429;
+  padding: 30px;
+  border-radius: 12px;
+  width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+}
+
+.auth-box form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.auth-box label {
+  font-size: 0.9rem;
+  color: #7ae2dd;
+}
+
+.auth-box input {
+  width: 100%;
+}
+
+.auth-box button,
+.login-btn {
+  background: #7ae2dd;
+  color: #1a1b1e;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.auth-box button:hover,
+.login-btn:hover {
+  background: #5ecdc7;
+}
+
+.auth-box p {
+  font-size: 0.85rem;
+  text-align: center;
+  color: #dceaf4;
+}
+
+.auth-box p a {
+  color: #7ae2dd;
+}
+
+/* =========================
+     Profile Page
+  ========================= */
+.profile-page {
+  display: flex;
+  gap: 24px;
+  padding: 30px;
+}
+
+.user-section {
+  flex: 1;
+  background: #232429;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.profile-image {
+  width: 90px;
+  height: 90px;
+  background: #38437c;
+  border-radius: 50%;
+  margin: 0 auto 15px;
+}
+
+.user-section h3 {
+  margin: 10px 0;
+  font-size: 1.4rem;
+}
+
+.follow-btn {
+  background: #7ae2dd;
+  color: #1a1b1e;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 600;
+  margin-top: 10px;
+  transition: background 0.3s ease;
+}
+
+.follow-btn:hover {
+  background: #5ecdc7;
+}
+
+.follower {
+  margin-top: 15px;
+  font-size: 0.9rem;
+  color: #a6b3c4;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.logout-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #38437c;
+  color: #dceaf4;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  background: #7ae2dd;
+  color: #1a1b1e;
+}
+
+/* =========================
+     HeatMap
+  ========================= */
+.heatmap-section {
+  flex: 2;
+  background: #232429;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.heatmap-section h4 {
+  margin-bottom: 16px;
+  color: #7ae2dd;
+}
