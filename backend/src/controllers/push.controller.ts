@@ -1,6 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
-import { s3, S3_BUCKET } from "../config/aws-config";
+import { s3, S3_BUCKET } from "../config/aws-confing";
 
 export async function pushRepo(): Promise<void> {
   const repoPath = path.resolve(process.cwd(), ".apnaGit");

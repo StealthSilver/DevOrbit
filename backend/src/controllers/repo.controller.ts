@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
-import Repository from "../models/repository.model";
+import { Repository } from "../models/repo.model";
 
 export async function createRepository(
   req: Request,

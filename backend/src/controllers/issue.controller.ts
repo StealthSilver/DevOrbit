@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Issue from "../models/issue.model";
+import { Issue } from "../models/issue.model";
 
 export async function createIssue(req: Request, res: Response): Promise<void> {
   const { title, description } = req.body;
