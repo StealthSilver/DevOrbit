@@ -2,7 +2,7 @@ import { promises as fs } from "fs";
 import path from "path";
 
 export async function addRepo(filePath: string): Promise<void> {
-  const repoPath = path.resolve(process.cwd(), ".apnaGit");
+  const repoPath = path.resolve(process.cwd(), ".devOrbit");
   const stagingPath = path.join(repoPath, "staging");
 
   try {

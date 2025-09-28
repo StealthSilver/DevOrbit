@@ -3,7 +3,7 @@ import path from "path";
 import { v4 as uuidv4 } from "uuid";
 
 export async function commitRepo(message: string): Promise<void> {
-  const repoPath = path.resolve(process.cwd(), ".apnaGit");
+  const repoPath = path.resolve(process.cwd(), ".devOrbit");
   const stagedPath = path.join(repoPath, "staging");
   const commitPath = path.join(repoPath, "commits");
 
