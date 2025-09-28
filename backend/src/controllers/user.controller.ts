@@ -30,7 +30,7 @@ export async function signup(req: Request, res: Response): Promise<void> {
   const { username, password, email } = req.body;
   try {
     const client = await connectClient();
-    const db = client.db("githubclone");
+    const db = client.db("devOrbitUser");
     const usersCollection = db.collection<User>("users");
 
     const existingUser = await usersCollection.findOne({ username });
