@@ -18,11 +18,14 @@ const Signup: React.FC = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const res = await axios.post("http://localhost:3000/signup", {
-        email,
-        password,
-        username,
-      });
+      const res = await axios.post(
+        "https://devorbit-m60c.onrender.com/signup",
+        {
+          email,
+          password,
+          username,
+        }
+      );
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("userId", res.data.userId);

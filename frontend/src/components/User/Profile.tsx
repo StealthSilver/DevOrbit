@@ -25,7 +25,7 @@ const Profile: React.FC = () => {
       if (userId) {
         try {
           const response = await axios.get(
-            `http://localhost:3000/userProfile/${userId}`
+            `https://devorbit-m60c.onrender.com/userProfile/${userId}`
           );
           setUserDetails(response.data);
         } catch (err) {

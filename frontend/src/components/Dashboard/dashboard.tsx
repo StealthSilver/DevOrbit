@@ -22,7 +22,7 @@ const Dashboard: React.FC = () => {
     const fetchRepositories = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/repo/user/${userId}`
+          `https://devorbit-m60c.onrender.com/userProfile/${userId}`
         );
         const data = await response.json();
         setRepositories(data.repositories || []);
@@ -33,7 +33,9 @@ const Dashboard: React.FC = () => {
 
     const fetchSuggestedRepositories = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/repo/all`);
+        const response = await fetch(
+          `https://devorbit-m60c.onrender.com/repo/all`
+        );
         const data = await response.json();
         setSuggestedRepositories(data || []);
       } catch (err) {
