@@ -32,10 +32,21 @@ export async function signup(req: Request, res: Response): Promise<void> {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newUser = { username, password: hashedPassword, email, repositories: [], followedUsers: [], starRepos: [] };
+    const newUser = {
+      username,
+      password: hashedPassword,
+      email,
+      repositories: [],
+      followedUsers: [],
+      starRepos: [],
+    };
     const result = await usersCollection.insertOne(newUser);
 
-    const token = jwt.sign({ id: result.insertedId }, process.env.JWT_SECRET_KEY as string, { expiresIn: "1h" });
+    const token = jwt.sign(
+      { id: result.insertedId },
+      process.env.JWT_SECRET_KEY as string,
+      { expiresIn: "1h" }
+    );
     res.json({ token, userId: result.insertedId });
   } catch (err: any) {
     console.error("Error during signup:", err.message);
@@ -50,7 +61,7 @@ export async function login(req: Request, res: Response): Promise<void> {
     const db = client.db("githubclone");
     const usersCollection = db.collection("users");
 
-    const user = await usersCollection.findOne({ email });
+    const user = await usersCollection.findOne<{ password: string }>({ email });
     if (!user) {
       res.status(400).json({ message: "Invalid credentials!" });
       return;
@@ -62,7 +73,11 @@ export async function login(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY as string, { expiresIn: "1h" });
+    const token = jwt.sign(
+      { id: user._id },
+      process.env.JWT_SECRET_KEY as string,
+      { expiresIn: "1h" }
+    );
     res.json({ token, userId: user._id });
   } catch (err: any) {
     console.error("Error during login:", err.message);
@@ -84,13 +99,18 @@ export async function getAllUsers(req: Request, res: Response): Promise<void> {
   }
 }
 
-export async function getUserProfile(req: Request, res: Response): Promise<void> {
+export async function getUserProfile(
+  req: Request,
+  res: Response
+): Promise<void> {
   try {
     const client = await connectClient();
     const db = client.db("githubclone");
     const usersCollection = db.collection("users");
 
-    const user = await usersCollection.findOne({ _id: new ObjectId(req.params.id) });
+    const user = await usersCollection.findOne({
+      _id: new ObjectId(req.params.id),
+    });
     if (!user) {
       res.status(404).json({ message: "User not found!" });
       return;
@@ -102,14 +122,20 @@ export async function getUserProfile(req: Request, res: Response): Promise<void>
   }
 }
 
-export async function updateUserProfile(req: Request, res: Response): Promise<void> {
+export async function updateUserProfile(
+  req: Request,
+  res: Response
+): Promise<void> {
   const { email, password } = req.body;
   try {
     const client = await connectClient();
     const db = client.db("githubclone");
     const usersCollection = db.collection("users");
 
-    let updateFields: Partial<{ email: string; password: string }> = { email };
+    let updateFields: Partial<{ email: string; password: string }> = {};
+    if (email) {
+      updateFields.email = email;
+    }
     if (password) {
       const salt = await bcrypt.genSalt(10);
       updateFields.password = await bcrypt.hash(password, salt);
@@ -132,17 +158,25 @@ export async function updateUserProfile(req: Request, res: Response): Promise<vo
   }
 }
 
-export async function deleteUserProfile(req: Request, res: Response): Promise<void> {
+export async function deleteUserProfile(
+  req: Request,
+  res: Response
+): Promise<void> {
   try {
     const client = await connectClient();
     const db = client.db("githubclone");
     const usersCollection = db.collection("users");
 
-    const result = await usersCollection.deleteOne({ _id: new ObjectId(req.params.id) });
+    const result = await usersCollection.deleteOne({
+      _id: new ObjectId(req.params.id),
+    });
     if (result.deletedCount === 0) {
       res.status(404).json({ message: "User not found!" });
       return;
     }
     res.json({ message: "User Profile Deleted!" });
   } catch (err: any) {
-    console.error
+    console.error("Error deleting user:", err.message);
+    res.status(500).send("Server error!");
+  }
+}

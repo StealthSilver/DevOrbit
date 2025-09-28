@@ -1,21 +1,21 @@
-import express, { Application, Request, Response } from "express";
+import express, { Application } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import http from "http";
 import { Server, Socket } from "socket.io";
-import yargs from "yargs";
+import yargs, { Argv } from "yargs";
 import { hideBin } from "yargs/helpers";
 
 import mainRouter from "./routes/main.router";
 
-import { initRepo } from "./controllers/init";
-import { addRepo } from "./controllers/add";
-import { commitRepo } from "./controllers/commit";
-import { pushRepo } from "./controllers/push";
-import { pullRepo } from "./controllers/pull";
-import { revertRepo } from "./controllers/revert";
+import { initRepo } from "./controllers/init.controller";
+import { addRepo } from "./controllers/add.controller";
+import { commitRepo } from "./controllers/commit.controller";
+import { pushRepo } from "./controllers/push.controller";
+import { pullRepo } from "./controllers/pull.controller";
+import { revertRepo } from "./controllers/revert.controller";
 
 dotenv.config();
 
@@ -25,7 +25,7 @@ yargs(hideBin(process.argv))
   .command(
     "add <file>",
     "Add a file to the repository",
-    (yargs) => {
+    (yargs: Argv) => {
       return yargs.positional("file", {
         describe: "File to add to the staging area",
         type: "string",
@@ -38,7 +38,7 @@ yargs(hideBin(process.argv))
   .command(
     "commit <message>",
     "Commit the staged files",
-    (yargs) => {
+    (yargs: Argv) => {
       return yargs.positional("message", {
         describe: "Commit message",
         type: "string",
@@ -53,7 +53,7 @@ yargs(hideBin(process.argv))
   .command(
     "revert <commitID>",
     "Revert to a specific commit",
-    (yargs) => {
+    (yargs: Argv) => {
       return yargs.positional("commitID", {
         describe: "Commit ID to revert to",
         type: "string",
@@ -85,7 +85,6 @@ function startServer(): void {
     .catch((err) => console.error("Unable to connect: ", err));
 
   app.use(cors({ origin: "*" }));
-
   app.use("/", mainRouter);
 
   let user: string = "test";
@@ -108,7 +107,6 @@ function startServer(): void {
   });
 
   const db = mongoose.connection;
-
   db.once("open", async () => {
     console.log("CRUD operations called");
     // CRUD operations

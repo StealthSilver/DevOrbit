@@ -1,5 +1,5 @@
 import { Router } from "express";
-import * as repoController from "../controllers/repoController";
+import * as repoController from "../controllers/repo.controller";
 
 const repoRouter: Router = Router();
 
