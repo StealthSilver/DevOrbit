@@ -1,0 +1,13 @@
+DEV ORBIT : this is a github like prokject with the core functionailites 
+
+BACKEND : nodejs, express, yargs
+
+FRONTEND : react, bootstrap
+
+TOOLS : git, github 
+
+DATABASE : mongo
+
+DEPLOYMENT : AWS
+
+TESTING : Jest
