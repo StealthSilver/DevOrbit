@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { MongoClient, ObjectId } from "mongodb";
+import { MongoClient, ObjectId, ModifyResult } from "mongodb";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -16,12 +16,22 @@ async function connectClient(): Promise<MongoClient> {
   return client;
 }
 
+interface User {
+  _id: ObjectId;
+  username: string;
+  email: string;
+  password: string;
+  repositories: string[];
+  followedUsers: string[];
+  starRepos: string[];
+}
+
 export async function signup(req: Request, res: Response): Promise<void> {
   const { username, password, email } = req.body;
   try {
     const client = await connectClient();
     const db = client.db("githubclone");
-    const usersCollection = db.collection("users");
+    const usersCollection = db.collection<User>("users");
 
     const existingUser = await usersCollection.findOne({ username });
     if (existingUser) {
@@ -32,7 +42,7 @@ export async function signup(req: Request, res: Response): Promise<void> {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newUser = {
+    const newUser: Omit<User, "_id"> = {
       username,
       password: hashedPassword,
       email,
@@ -40,7 +50,7 @@ export async function signup(req: Request, res: Response): Promise<void> {
       followedUsers: [],
       starRepos: [],
     };
-    const result = await usersCollection.insertOne(newUser);
+    const result = await usersCollection.insertOne(newUser as User);
 
     const token = jwt.sign(
       { id: result.insertedId },
@@ -59,9 +69,9 @@ export async function login(req: Request, res: Response): Promise<void> {
   try {
     const client = await connectClient();
     const db = client.db("githubclone");
-    const usersCollection = db.collection("users");
+    const usersCollection = db.collection<User>("users");
 
-    const user = await usersCollection.findOne<{ password: string }>({ email });
+    const user = await usersCollection.findOne({ email });
     if (!user) {
       res.status(400).json({ message: "Invalid credentials!" });
       return;
@@ -78,7 +88,9 @@ export async function login(req: Request, res: Response): Promise<void> {
       process.env.JWT_SECRET_KEY as string,
       { expiresIn: "1h" }
     );
-    res.json({ token, userId: user._id });
+
+    const { password: _, ...safeUser } = user;
+    res.json({ token, userId: user._id, user: safeUser });
   } catch (err: any) {
     console.error("Error during login:", err.message);
     res.status(500).send("Server error!");
@@ -89,9 +101,12 @@ export async function getAllUsers(req: Request, res: Response): Promise<void> {
   try {
     const client = await connectClient();
     const db = client.db("githubclone");
-    const usersCollection = db.collection("users");
+    const usersCollection = db.collection<User>("users");
 
-    const users = await usersCollection.find({}).toArray();
+    const users = await usersCollection
+      .find({})
+      .project({ password: 0 })
+      .toArray();
     res.json(users);
   } catch (err: any) {
     console.error("Error fetching users:", err.message);
@@ -106,11 +121,12 @@ export async function getUserProfile(
   try {
     const client = await connectClient();
     const db = client.db("githubclone");
-    const usersCollection = db.collection("users");
+    const usersCollection = db.collection<User>("users");
 
-    const user = await usersCollection.findOne({
-      _id: new ObjectId(req.params.id),
-    });
+    const user = await usersCollection.findOne(
+      { _id: new ObjectId(req.params.id) },
+      { projection: { password: 0 } }
+    );
     if (!user) {
       res.status(404).json({ message: "User not found!" });
       return;
@@ -130,9 +146,9 @@ export async function updateUserProfile(
   try {
     const client = await connectClient();
     const db = client.db("githubclone");
-    const usersCollection = db.collection("users");
+    const usersCollection = db.collection<User>("users");
 
-    let updateFields: Partial<{ email: string; password: string }> = {};
+    let updateFields: Partial<User> = {};
     if (email) {
       updateFields.email = email;
     }
@@ -141,17 +157,20 @@ export async function updateUserProfile(
       updateFields.password = await bcrypt.hash(password, salt);
     }
 
-    const result = await usersCollection.findOneAndUpdate(
+    const result: ModifyResult<User> = await usersCollection.findOneAndUpdate(
       { _id: new ObjectId(req.params.id) },
       { $set: updateFields },
       { returnDocument: "after" }
     );
 
-    if (!result.value) {
+    const updatedUser = result.value;
+    if (!updatedUser) {
       res.status(404).json({ message: "User not found!" });
       return;
     }
-    res.send(result.value);
+
+    const { password: _, ...safeUser } = updatedUser;
+    res.send(safeUser);
   } catch (err: any) {
     console.error("Error updating user:", err.message);
     res.status(500).send("Server error!");
@@ -165,7 +184,7 @@ export async function deleteUserProfile(
   try {
     const client = await connectClient();
     const db = client.db("githubclone");
-    const usersCollection = db.collection("users");
+    const usersCollection = db.collection<User>("users");
 
     const result = await usersCollection.deleteOne({
       _id: new ObjectId(req.params.id),

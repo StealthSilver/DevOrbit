@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import http from "http";
 import { Server, Socket } from "socket.io";
-import yargs, { Argv } from "yargs";
+import yargs, { ArgumentsCamelCase } from "yargs";
 import { hideBin } from "yargs/helpers";
 
 import mainRouter from "./routes/main.router";
@@ -25,26 +25,26 @@ yargs(hideBin(process.argv))
   .command(
     "add <file>",
     "Add a file to the repository",
-    (yargs: Argv) => {
+    (yargs) => {
       return yargs.positional("file", {
         describe: "File to add to the staging area",
         type: "string",
       });
     },
-    (argv: { file: string }) => {
+    (argv: ArgumentsCamelCase<{ file: string }>) => {
       addRepo(argv.file);
     }
   )
   .command(
     "commit <message>",
     "Commit the staged files",
-    (yargs: Argv) => {
+    (yargs) => {
       return yargs.positional("message", {
         describe: "Commit message",
         type: "string",
       });
     },
-    (argv: { message: string }) => {
+    (argv: ArgumentsCamelCase<{ message: string }>) => {
       commitRepo(argv.message);
     }
   )
@@ -53,13 +53,13 @@ yargs(hideBin(process.argv))
   .command(
     "revert <commitID>",
     "Revert to a specific commit",
-    (yargs: Argv) => {
+    (yargs) => {
       return yargs.positional("commitID", {
         describe: "Commit ID to revert to",
         type: "string",
       });
     },
-    (argv: { commitID: string }) => {
+    (argv: ArgumentsCamelCase<{ commitID: string }>) => {
       revertRepo(argv.commitID);
     }
   )
@@ -109,7 +109,7 @@ function startServer(): void {
   const db = mongoose.connection;
   db.once("open", async () => {
     console.log("CRUD operations called");
-    // CRUD operations
+    // CRUD operations can go here
   });
 
   httpServer.listen(port, () => {
