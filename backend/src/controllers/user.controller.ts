@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { MongoClient, ObjectId, ModifyResult } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -157,12 +157,12 @@ export async function updateUserProfile(
       updateFields.password = await bcrypt.hash(password, salt);
     }
 
-    const result: ModifyResult<User> = await usersCollection.findOneAndUpdate(
+    const result = await usersCollection.findOneAndUpdate(
       { _id: new ObjectId(req.params.id) },
       { $set: updateFields },
       { returnDocument: "after" }
     );
-
+    // @ts-ignore
     const updatedUser = result.value;
     if (!updatedUser) {
       res.status(404).json({ message: "User not found!" });
