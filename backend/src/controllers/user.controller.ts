@@ -68,7 +68,7 @@ export async function login(req: Request, res: Response): Promise<void> {
   const { email, password } = req.body;
   try {
     const client = await connectClient();
-    const db = client.db("githubclone");
+    const db = client.db("devOrbitUser");
     const usersCollection = db.collection<User>("users");
 
     const user = await usersCollection.findOne({ email });
@@ -100,7 +100,7 @@ export async function login(req: Request, res: Response): Promise<void> {
 export async function getAllUsers(req: Request, res: Response): Promise<void> {
   try {
     const client = await connectClient();
-    const db = client.db("githubclone");
+    const db = client.db("devOrbitUser");
     const usersCollection = db.collection<User>("users");
 
     const users = await usersCollection
@@ -120,7 +120,7 @@ export async function getUserProfile(
 ): Promise<void> {
   try {
     const client = await connectClient();
-    const db = client.db("githubclone");
+    const db = client.db("devOrbitUser");
     const usersCollection = db.collection<User>("users");
 
     const user = await usersCollection.findOne(
@@ -145,7 +145,7 @@ export async function updateUserProfile(
   const { email, password } = req.body;
   try {
     const client = await connectClient();
-    const db = client.db("githubclone");
+    const db = client.db("devOrbitUser");
     const usersCollection = db.collection<User>("users");
 
     let updateFields: Partial<User> = {};
@@ -183,7 +183,7 @@ export async function deleteUserProfile(
 ): Promise<void> {
   try {
     const client = await connectClient();
-    const db = client.db("githubclone");
+    const db = client.db("devOrbitUser");
     const usersCollection = db.collection<User>("users");
 
     const result = await usersCollection.deleteOne({
